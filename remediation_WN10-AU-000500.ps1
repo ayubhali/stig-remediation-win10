@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    This PowerShell script ensures that the maximum size of the Windows Application event log is at least 32768 KB (32 MB), in compliance with STIG ID WN10-AU-000030.
+    This PowerShell script sets the maximum size of the Windows Application event log to at least 32768 KB (32 MB), in compliance with STIG ID WN10-AU-000030.
 
 .NOTES
     Author          : Ayub Ali
@@ -23,19 +23,18 @@
     PS C:\> .\remediation_WN10-AU-000030.ps1
 #>
 
-# Set maximum log file size for the Application log to 32768 KB (32 MB)
-$logName = "Application"
-$maxSizeKB = 32768
+# Define the registry path and value
+$registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application"
+$valueName    = "MaxSize"
+$valueData    = 32768 # 32 MB
 
-try {
-    Write-Output "Setting '$logName' log size to $maxSizeKB KB..."
-    wevtutil sl $logName /ms:$($maxSizeKB * 1024)
-
-    # Confirm the setting
-    $logInfo = wevtutil gl $logName
-    $logInfo | Select-String "maxSize"
-
-    Write-Output "`nRemediation complete for STIG ID: WN10-AU-000030."
-} catch {
-    Write-Error "Failed to update log size: $_"
+# Check if the registry path exists, if not create it
+if (-not (Test-Path $registryPath)) {
+    New-Item -Path $registryPath -Force | Out-Null
 }
+
+# Set the MaxSize value
+Set-ItemProperty -Path $registryPath -Name $valueName -Value $valueData -Type DWord
+
+# Output success message
+Write-Host "Registry value '$valueName' set to '$valueData' at '$registryPath'."
