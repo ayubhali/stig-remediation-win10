@@ -23,12 +23,10 @@
     PS C:\> .\remediation_WN10-AU-000030.ps1
 #>
 
-# Define the registry path and value
 $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application"
 $valueName    = "MaxSize"
 $valueData    = 32768 # 32 MB
 
-# Check if the registry path exists, if not create it
 if (-not (Test-Path $registryPath)) {
     New-Item -Path $registryPath -Force | Out-Null
 }
@@ -36,5 +34,4 @@ if (-not (Test-Path $registryPath)) {
 # Set the MaxSize value
 Set-ItemProperty -Path $registryPath -Name $valueName -Value $valueData -Type DWord
 
-# Output success message
 Write-Host "Registry value '$valueName' set to '$valueData' at '$registryPath'."
