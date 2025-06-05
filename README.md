@@ -1,4 +1,4 @@
-# stig-remediation-win10
+# Stig-remediation-win10
 
 PowerShell scripts for automating Windows 10 DISA STIG compliance fixes.  
 Each script remediates a specific STIG ID and is tested on Windows 10 Pro 22H2 using PowerShell 5.1+.
